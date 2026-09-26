@@ -8,6 +8,5 @@
   },
   "engines": {
     "node": ">=18"
-  },
-  "main": "server.js"
+  }
 }
