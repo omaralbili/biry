@@ -130,7 +130,7 @@ async function askGemini(message, mode) {
   return reply;
 }
 
-// Handler الرئيسي للطلبات
+// Handler الرئيسي لمعالجة الطلبات
 const requestHandler = async (req, res) => {
   try {
     if (req.method === 'OPTIONS') {
@@ -142,7 +142,8 @@ const requestHandler = async (req, res) => {
       return res.end();
     }
 
-    if (req.method === 'POST' && req.url === '/api/ai-response') {
+    // معالجة طلبات API الذكاء الاصطناعي
+    if (req.method === 'POST' && (req.url === '/api/ai-response' || req.url.endsWith('/ai-response'))) {
       const body = await readBody(req);
       const message = String(body.message || '').trim();
       const mode = body.mode === 'more' ? 'more' : 'answer';
@@ -152,6 +153,12 @@ const requestHandler = async (req, res) => {
       return sendJson(res, 200, { reply: await askGemini(message, mode) });
     }
 
+    // إذا لم يكن الطلب موجه للـ API وكان قادماً لـ Vercel
+    if (process.env.VERCEL) {
+      return sendJson(res, 404, { error: 'API route not found' });
+    }
+
+    // تقديم الملفات الثابتة محلياً فقط
     const requestPath = decodeURIComponent((req.url || '/').split('?')[0]);
     const relative = requestPath === '/' ? 'index.html' : requestPath.replace(/^\/+/, '');
     const filePath = path.normalize(path.join(__dirname, relative));
@@ -164,10 +171,10 @@ const requestHandler = async (req, res) => {
   }
 };
 
-// تصدير الـ Handler لـ Vercel
+// تصدير الـ Handler لبيئة Vercel Serverless
 module.exports = requestHandler;
 
-// تشغيل الخادم محلياً فقط عند التشغيل خارج بيئة Vercel
+// تشغيل الخادم محلياً فقط خارج بيئة Vercel
 if (!process.env.VERCEL) {
   const server = http.createServer(requestHandler);
   server.listen(PORT, () => console.log(`Berry is running at http://localhost:${PORT}`));
