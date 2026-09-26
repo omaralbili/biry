@@ -1,4 +1,4 @@
-/**
+﻿/**
  * بيري | Berry Chatbot — Gemini Backend
  *
  * Gemini API configuration:
@@ -153,9 +153,9 @@ const server = http.createServer(async (req, res) => {
 
     const requestPath = decodeURIComponent((req.url || '/').split('?')[0]);
     const relative = requestPath === '/' ? 'index.html' : requestPath.replace(/^\/+/, '');
-    const filePath = path.normalize(path.join(__dirname, relative.startsWith('biry/') ? relative : `biry/${relative}`));
+    const filePath = path.normalize(path.join(__dirname, relative));
     const root = path.normalize(__dirname);
-    if (!filePath.startsWith(root + path.sep)) return sendJson(res, 403, { error: 'Forbidden' });
+    if (!filePath.startsWith(root)) return sendJson(res, 403, { error: 'Forbidden' });
     return sendFile(res, filePath);
   } catch (err) {
     console.error(err);
@@ -164,3 +164,4 @@ const server = http.createServer(async (req, res) => {
 });
 
 server.listen(PORT, () => console.log(`Berry is running at http://localhost:${PORT}`));
+
