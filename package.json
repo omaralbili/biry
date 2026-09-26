@@ -1,0 +1,12 @@
+{
+  "name": "biry-gemini-chatbot",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Berry chatbot with Gemini API backend",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

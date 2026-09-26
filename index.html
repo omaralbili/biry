@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>بيري | مساعد برنامج تكنولوجيا التعليم لذوي الاحتياجات الخاصة</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🤖</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app">
+
+  <!-- Mobile sidebar toggle -->
+  <button class="mobile-toggle" id="mobileToggle" aria-label="فتح القائمة الجانبية">
+    <span></span><span></span><span></span>
+  </button>
+
+  <!-- Sidebar overlay for mobile -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="brand">
+        <span class="brand-icon">🤖</span>
+        <span class="brand-name">بيري <small>Berry</small></span>
+      </div>
+      <button class="btn-new-chat" id="newChatBtn">
+        <span>+</span> محادثة جديدة
+      </button>
+    </div>
+
+    <div class="sidebar-section-label">المحادثات السابقة</div>
+    <nav class="sidebar-conversations" id="conversationsList">
+      <!-- Conversation items injected by app.js -->
+    </nav>
+
+    <div class="sidebar-footer">
+      <button class="sidebar-footer-btn" id="aboutBtn">
+        <span class="icon">ℹ️</span> عن البرنامج
+      </button>
+      <button class="sidebar-footer-btn" id="infoBtn">
+        <span class="icon">📚</span> معلومات البرنامج
+      </button>
+      <button class="sidebar-footer-btn" id="settingsBtn">
+        <span class="icon">⚙️</span> الإعدادات
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main chat area -->
+  <main class="main">
+
+    <header class="main-header">
+      <span class="main-header-title" id="conversationTitle">محادثة جديدة</span>
+    </header>
+
+    <div class="chat-scroll" id="chatScroll">
+
+      <!-- Welcome / empty state -->
+      <section class="welcome-screen" id="welcomeScreen">
+        <div class="welcome-icon">🤖</div>
+        <h1>مرحبًا، أنا بيري 👋</h1>
+        <p class="welcome-sub">مساعدك الذكي للتعرف على برنامج إعداد أخصائي تكنولوجيا التعليم لذوي الاحتياجات الخاصة</p>
+        <p class="welcome-hint">يمكنك سؤالي عن البرنامج، شروط الالتحاق، مجالات العمل، المهارات التي ستكتسبها، وأهمية البرنامج.</p>
+
+        <div class="quick-questions" id="quickQuestions">
+          <button class="quick-btn" data-question="ما هي شروط الالتحاق بالبرنامج؟">🎓 شروط الالتحاق</button>
+          <button class="quick-btn" data-question="ما هو نظام القبول؟">📋 القبول</button>
+          <button class="quick-btn" data-question="ما هي مهارات الخريج؟">💡 مهارات الخريج</button>
+          <button class="quick-btn" data-question="ما هي مجالات العمل؟">💼 مجالات العمل</button>
+          <button class="quick-btn" data-question="ما هي أهمية البرنامج؟">🌍 أهمية البرنامج</button>
+          <button class="quick-btn" data-question="ماذا سأتعلم في البرنامج؟">🤖 ماذا سأتعلم؟</button>
+        </div>
+      </section>
+
+      <!-- Messages list -->
+      <div class="messages" id="messages"></div>
+
+    </div>
+
+    <!-- Composer -->
+    <div class="composer-wrap">
+      <form class="composer-form" id="composerForm">
+        <textarea
+          id="messageInput"
+          class="composer-input"
+          placeholder="اكتب سؤالك هنا..."
+          rows="1"
+          maxlength="1000"></textarea>
+        <button type="submit" class="send-btn" id="sendBtn" aria-label="إرسال" disabled>
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M3 11.5L21 3l-8.5 18-2.5-7.5L3 11.5z"/></svg>
+        </button>
+      </form>
+      <p class="composer-hint">Enter للإرسال &middot; Shift + Enter لسطر جديد</p>
+    </div>
+
+  </main>
+</div>
+
+<!-- Generic modal for "About", "Program Info", "Settings" -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" id="modal" role="dialog" aria-modal="true">
+    <button class="modal-close" id="modalClose" aria-label="إغلاق">✕</button>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<!-- Message bubble template (cloned via JS, keeps app.js free of raw HTML strings for structure) -->
+<template id="botMessageTemplate">
+  <div class="message message-bot">
+    <div class="avatar avatar-bot">🤖</div>
+    <div class="message-content">
+      <div class="message-bubble"></div>
+      <div class="message-actions"></div>
+    </div>
+  </div>
+</template>
+
+<template id="userMessageTemplate">
+  <div class="message message-user">
+    <div class="message-content">
+      <div class="message-bubble"></div>
+    </div>
+    <div class="avatar avatar-user">🧑</div>
+  </div>
+</template>
+
+<template id="typingTemplate">
+  <div class="message message-bot message-typing" id="typingIndicator">
+    <div class="avatar avatar-bot">🤖</div>
+    <div class="message-content">
+      <div class="typing-bubble">
+        <span class="typing-text">بيري يكتب</span>
+        <span class="typing-dots"><i></i><i></i><i></i></span>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script src="app.js"></script>
+</body>
+</html>
