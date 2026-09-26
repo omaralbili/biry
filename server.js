@@ -1,4 +1,4 @@
-﻿/**
+/**
  * بيري | Berry Chatbot — Gemini Backend
  *
  * Gemini API configuration:
@@ -130,7 +130,8 @@ async function askGemini(message, mode) {
   return reply;
 }
 
-const server = http.createServer(async (req, res) => {
+// Handler الرئيسي للطلبات
+const requestHandler = async (req, res) => {
   try {
     if (req.method === 'OPTIONS') {
       res.writeHead(204, {
@@ -161,7 +162,13 @@ const server = http.createServer(async (req, res) => {
     console.error(err);
     return sendJson(res, 500, { error: err.message || 'Server error' });
   }
-});
+};
 
-server.listen(PORT, () => console.log(`Berry is running at http://localhost:${PORT}`));
+// تصدير الـ Handler لـ Vercel
+module.exports = requestHandler;
 
+// تشغيل الخادم محلياً فقط عند التشغيل خارج بيئة Vercel
+if (!process.env.VERCEL) {
+  const server = http.createServer(requestHandler);
+  server.listen(PORT, () => console.log(`Berry is running at http://localhost:${PORT}`));
+}
