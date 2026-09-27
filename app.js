@@ -578,7 +578,7 @@ async function handleUserQuery(userText){
     hideTyping();
     console.error('AI response error:', err);
     addBotMessage(
-      `<p class="not-found-note error-bubble-text">عزيزي طالب تكنولوجيا التعليم يوجد ضغط في الاسئلة حاليا .. حاول بعد قليل</p>`,
+      `<p class="not-found-note error-bubble-text">عزيزي طالب تكنولوجيا التعليم لذوي الاحتياجات الخاصة يوجد ضغط في الاسئلة حاليا .. حاول بعد قليل</p>`,
       [{ type: 'retry', query: userText }]
     );
   }
