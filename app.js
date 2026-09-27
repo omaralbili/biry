@@ -578,7 +578,7 @@ async function handleUserQuery(userText){
     hideTyping();
     console.error('AI response error:', err);
     addBotMessage(
-      `<p class="not-found-note error-bubble-text">تعذر الحصول على إجابة من Gemini حاليًا. تأكد من تشغيل الخادم وإعداد مفتاح Gemini API ثم حاول مرة أخرى.</p>`,
+      `<p class="not-found-note error-bubble-text">عزيزي طالب تكنولوجيا التعليم يوجد ضغط في الاسئلة حاليا .. حاول بعد قليل</p>`,
       [{ type: 'retry', query: userText }]
     );
   }
