@@ -655,7 +655,7 @@ async function runSearchAction(query, triggerBtn){
     hideTyping();
     console.error('Gemini "more" error:', err);
     addBotMessage(
-      `<p class="not-found-note error-bubble-text">تعذر الحصول على التفاصيل من Gemini حاليًا. حاول مرة أخرى.</p>`,
+      `<p class="not-found-note error-bubble-text">تعذر الحصول على التفاصيل من قاعدة البيانات حاليًا. حاول مرة أخرى.</p>`,
       [{ type: 'retry', query }]
     );
   }finally{
